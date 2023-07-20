@@ -1,0 +1,23 @@
+<div class="custom-dropdown">
+  <button class="dropdown-button" [class.active]="showDropdown" (click)="toggleDropdown()">{{ searchText || 'Select an option' }}</button>
+
+  <ul class="dropdown-list" *ngIf="showDropdown">
+    <li >
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (keyup)="filterOptions()"
+        (keydown.enter)="selectOption(searchText)"
+        (click)="stopClickPropagation($event)"
+        placeholder="Search..."
+      />
+    </li>
+    <li
+      *ngFor="let option of filteredOptions"
+      (click)="selectOption(option)"
+      [class.selected]="searchText === option"
+    >
+      {{ option }}
+    </li>
+  </ul>
+</div>
