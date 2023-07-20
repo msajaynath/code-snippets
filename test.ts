@@ -50,21 +50,24 @@ export class CustomDropdownComponent {
       this.showSearchBar = false;
     }
   }
-   @HostListener('scroll', ['$event'])
-  onScroll(event: Event) {
-    if (this.showDropdown && this.overlayRef) {
-      this.positionDropdown();
-    }
-  }
+   @HostListener('scroll', ['$event.target'])
+  onScroll(targetElement: any) {
+    if (this.showDropdown && this.dropdownList.nativeElement) {
+      const dropdownRect = this.dropdownList.nativeElement.getBoundingClientRect();
+      const buttonRect = this.elRef.nativeElement.getBoundingClientRect();
 
-  private positionDropdown() {
-    const buttonRect = this.elRef.nativeElement.getBoundingClientRect();
-    const top = buttonRect.bottom + 5; // 5 pixels below the button
-    const left = buttonRect.left;
+      const top = buttonRect.bottom + 5; // 5 pixels below the button
+      const left = buttonRect.left;
 
-    if (this.lastPosition.top !== top || this.lastPosition.left !== left) {
-      this.overlayRef.updatePosition({ top: top + 'px', left: left + 'px' });
-      this.lastPosition = { top, left };
+      if (
+        dropdownRect.top !== top ||
+        dropdownRect.left !== left ||
+        dropdownRect.width !== buttonRect.width
+      ) {
+        this.dropdownList.nativeElement.style.top = top + 'px';
+        this.dropdownList.nativeElement.style.left = left + 'px';
+        this.dropdownList.nativeElement.style.width = buttonRect.width + 'px';
+      }
     }
   }
 }
